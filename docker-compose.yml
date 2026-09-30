@@ -2,7 +2,7 @@ services:
   service-a:
     build: ./service-a
     ports:
-      - "5000:5000"
+      - "5002:5000"
     environment:
       OTEL_SERVICE_NAME: service-a
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
