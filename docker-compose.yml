@@ -1,0 +1,36 @@
+services:
+  service-a:
+    build: ./service-a
+    ports:
+      - "5000:5000"
+    environment:
+      OTEL_SERVICE_NAME: service-a
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+    depends_on:
+      - service-b
+      - otel-collector
+
+  service-b:
+    build: ./service-b
+    environment:
+      OTEL_SERVICE_NAME: service-b
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+    depends_on:
+      - otel-collector
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command:
+      - "--config=/etc/otelcol/config.yaml"
+    volumes:
+      - ./collector.yaml:/etc/otelcol/config.yaml
+    depends_on:
+      - jaeger
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4317:4317"
