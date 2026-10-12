@@ -3,26 +3,22 @@ receivers:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
 
 processors:
   tail_sampling:
-    decision_wait: 10s
-    num_traces: 1000
-    expected_new_traces_per_sec: 20
+    decision_wait: 3s
     policies:
       - name: keep-errors
         type: status_code
         status_code:
           status_codes: [ERROR]
 
-      - name: keep-slow-traces
+      - name: keep-slow
         type: latency
         latency:
           threshold_ms: 1000
 
-      - name: sample-normal-traces
+      - name: sample-normal
         type: probabilistic
         probabilistic:
           sampling_percentage: 10
