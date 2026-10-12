@@ -272,3 +272,20 @@ Otherwise, no single Collector may have enough information to correctly evaluate
 Tail sampling reduces the number of traces exported to the backend such as Jaeger.
 
 However, it does **not** reduce the telemetry traffic sent from the application services to the Collector, because the Collector must first receive the spans before making the sampling decision.
+
+
+## Demo Procedure
+
+docker compose up 
+
+uv run python traffic/traffic.py
+
+docker compose restart
+
+// change collector.yaml to tail sampling
+
+uv run python traffic/traffic.py
+
+http.status_code=500
+
+max duration = 1000
